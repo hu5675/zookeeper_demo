@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException, KeeperException {
-        String hosts = "47.96.16.48:84";
+        String hosts = "localhost:2181";
         //创建组
 //        CreateGroup createGroup = new CreateGroup();
 ////        createGroup.connect(hosts);
@@ -63,39 +63,39 @@ public class Main {
 //        Thread.sleep(Long.MAX_VALUE);
 
 
-        Runnable task1 = new Runnable() {
-            public void run() {
-                DistributedLock lock = null;
-                try {
-                    lock = new DistributedLock(hosts, "test1");
-                    //lock = new DistributedLock(hosts,"test2");
-                    lock.lock();
-                    Thread.sleep(3000);
-                    System.out.println("===Thread " + Thread.currentThread().getId() + " running");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (lock != null)
-                        lock.unlock();
-                }
-
-            }
-
-        };
-        new Thread(task1).start();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
-        }
+//        Runnable task1 = new Runnable() {
+//            public void run() {
+//                DistributedLock lock = null;
+//                try {
+//                    lock = new DistributedLock(hosts, "test1");
+//                    //lock = new DistributedLock(hosts,"test2");
+//                    lock.lock();
+//                    Thread.sleep(3000);
+//                    System.out.println("===Thread " + Thread.currentThread().getId() + " running");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    if (lock != null)
+//                        lock.unlock();
+//                }
+//
+//            }
+//
+//        };
+//        new Thread(task1).start();
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e1) {
+//            e1.printStackTrace();
+//        }
 
         ConcurrentTest.ConcurrentTask[] tasks = new ConcurrentTest.ConcurrentTask[60];
         for (int i = 0; i < tasks.length; i++) {
             ConcurrentTest.ConcurrentTask task3 = new ConcurrentTest.ConcurrentTask() {
                 public void run() {
-                    DistributedLock lock = null;
+                    ZookeeperDistributedLock lock = null;
                     try {
-                        lock = new DistributedLock(hosts, "test2");
+                        lock = new ZookeeperDistributedLock(hosts, "test2");
                         lock.lock();
                         System.out.println("Thread " + Thread.currentThread().getId() + " running");
                     } catch (Exception e) {
